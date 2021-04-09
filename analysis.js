@@ -104,7 +104,7 @@ function complexity(filePath)
 	var buf = fs.readFileSync(filePath, "utf8");
 	var ast = esprima.parse(buf, options);
 
-	var i = 0;
+	var countStr = 0;
 
 	// A file level-builder:
 	var fileBuilder = new FileBuilder();
@@ -115,17 +115,53 @@ function complexity(filePath)
 	// Tranverse program with a function visitor.
 	traverseWithParents(ast, function (node) 
 	{
+
 		if (node.type === 'FunctionDeclaration') 
 		{
 			var builder = new FunctionBuilder();
 
 			builder.FunctionName = functionName(node);
 			builder.StartLine    = node.loc.start.line;
-
 			builders[builder.FunctionName] = builder;
+			var countNum = node.params.length;
+			//var countStr = 0;
+			//console.log(typeof count);
+			builder.ParameterCount = countNum;
+			//console.log("This is the variable type of array: "+ typeof node.params.length);
+			var countBoo=1;
+			var i =0;
+			var count=[0];
+			var countOp;
+			traverseWithParents(node, function(node){
+				if(isDecision(node)){
+					var countOpIt = 1;
+					countBoo+=1;
+					
+					traverseWithParents(node, function(node){
+						if(node.type==='LogicalExpression'){
+							if(node.operator==='&&' || node.operator==='||'){
+								countOpIt+=1;
+							}
+						}
+					})
+					//count+= [countOpIt];
+					count.push(countOpIt);
+					//i++;
+					
+				}
+			})
+			//console.log("This is count: "+ count);
+			//console.log("This should be max: "+count.reduce(function(a,b){return Math.max(a,b);}));
+			countOp = count.reduce(function(a,b){return Math.max(a,b);});
+			//console.log(typeof value);
+			builder.SimpleCyclomaticComplexity = countBoo;
+			builder.MaxConditions = countOp;
 		}
-
+		if(node.type ==='Literal'){
+					countStr +=1;
+				}
 	});
+	fileBuilder.Strings = countStr;
 
 }
 
