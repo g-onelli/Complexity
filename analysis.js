@@ -115,7 +115,7 @@ function complexity(filePath)
 	// Tranverse program with a function visitor.
 	traverseWithParents(ast, function (node) 
 	{
-		if (node.type === 'FunctionDeclaration') 
+if (node.type === 'FunctionDeclaration') 
 		{
 			var builder = new FunctionBuilder();
 
@@ -127,8 +127,28 @@ function complexity(filePath)
 			//console.log(typeof count);
 			builder.ParameterCount = countNum;
 			//console.log("This is the variable type of array: "+ typeof node.params.length);
-
-	});
+			var countBoo=1;
+			var i =0;
+			var count=[0];
+			var countOp;
+			traverseWithParents(node, function(node){
+				if(isDecision(node)){
+					var countOpIt = 1;
+					countBoo+=1;
+					
+					traverseWithParents(node, function(node){
+						if(node.type==='LogicalExpression'){
+							if(node.operator==='&&' || node.operator==='||'){
+								countOpIt+=1;
+							}
+						}
+					})
+					//count+= [countOpIt];
+					count.push(countOpIt);
+					//i++;
+					
+				}
+			})
 
 }
 
