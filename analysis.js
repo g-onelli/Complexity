@@ -121,9 +121,12 @@ function complexity(filePath)
 
 			builder.FunctionName = functionName(node);
 			builder.StartLine    = node.loc.start.line;
-
 			builders[builder.FunctionName] = builder;
-		}
+			var countNum = node.params.length;
+			//var countStr = 0;
+			//console.log(typeof count);
+			builder.ParameterCount = countNum;
+			//console.log("This is the variable type of array: "+ typeof node.params.length);
 
 	});
 
