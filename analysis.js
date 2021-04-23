@@ -185,6 +185,35 @@ function childrenLength(node)
 }
 
 
+function getStrings(){
+	var fPath = 'mystery.js'
+	var bufs = fs.readFileSync(fPath, "utf8");
+	var asts = esprima.parse(bufs, options);
+
+	var mysteryStr = 0;
+
+	// A file level-builder:
+	var fileBuilder = new FileBuilder();
+	fileBuilder.FileName = fPath;
+	fileBuilder.ImportCount = 0;
+	builders[fPath] = fileBuilder;
+
+	// Tranverse program with a function visitor.
+	traverseWithParents(asts, function (node) 
+	{
+
+		if (node.type === 'Literal') 
+		{
+			mysteryStr +=1;
+		if(node.type ==='Literal'){
+					
+				}
+	}
+	});
+	return mysteryStr;
+
+}
+
 // Helper function for checking if a node is a "decision type node"
 function isDecision(node)
 {
@@ -312,3 +341,5 @@ mints.toString().split(".")[0] + " " + szmin;
       }
   }
  exports.complexity = complexity;
+
+ exports.getStrings = getStrings;
